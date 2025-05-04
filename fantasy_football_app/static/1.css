@@ -1,0 +1,76 @@
+/* static/css/1.css */
+:root {
+    --primary-color: #3a5a78;
+    --secondary-color: #6c757d;
+}
+
+.player-card {
+    transition: all 0.3s ease;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.player-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.player-stats .badge {
+    margin-right: 5px;
+    font-size: 0.8rem;
+}
+
+.price-tag {
+    font-weight: bold;
+    color: var(--primary-color);
+    align-self: center;
+}
+
+.search-box {
+    width: 300px;
+}
+
+@media (max-width: 768px) {
+    .search-box {
+        width: 100%;
+        margin-top: 15px;
+    }
+    
+    .d-flex {
+        flex-direction: column;
+    }
+}
+
+/* Auth pages styling */
+.auth-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.card {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.form-control:focus {
+    border-color: #3a5a78;
+    box-shadow: 0 0 0 0.25rem rgba(58, 90, 120, 0.25);
+}
+
+.btn-primary {
+    background-color: #3a5a78;
+    border-color: #3a5a78;
+}
+
+.btn-primary:hover {
+    background-color: #2c4762;
+    border-color: #2c4762;
+}

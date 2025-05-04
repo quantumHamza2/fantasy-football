@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4><i class="bi bi-plus-circle"></i> Create New Team</h4>
+            </div>
+            <div class="card-body">
+                <form id="createTeamForm">
+                    <div class="mb-3">
+                        <label for="teamName" class="form-label">Team Name</label>
+                        <input type="text" class="form-control" id="teamName" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="teamStadium" class="form-label">Home Stadium</label>
+                        <input type="text" class="form-control" id="teamStadium">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Select Formation</label>
+                        <select class="form-select" id="formation">
+                            <option value="4-4-2">4-4-2 (Classic)</option>
+                            <option value="4-3-3">4-3-3 (Attacking)</option>
+                            <option value="3-5-2">3-5-2 (Midfield Control)</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Create Team
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

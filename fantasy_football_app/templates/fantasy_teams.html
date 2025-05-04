@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>🏆 {{ team.team_name }}</h2>
+<p>Owner: {{ team.owner_name }}</p>
+<p>Budget: £{{ team.budget }} | Points: {{ team.total_points }}</p>
+<h3>Squad</h3>
+<table>
+    <tr><th>Name</th><th>Position</th><th>Price</th><th>Points</th><th>Captain</th></tr>
+    {% for p in players %}
+    <tr>
+        <td>{{ p.name }}</td>
+        <td>{{ p.position }}</td>
+        <td>£{{ p.price }}</td>
+        <td>{{ p.total_points }}</td>
+        <td>{{ '⭐' if p.is_captain else '' }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

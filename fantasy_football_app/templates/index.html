@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>⚽ Welcome to Fantasy Football</h1>
+  <p>View teams, players, or create your fantasy team!</p>
+
+  <ul>
+    <li><a href="{{ url_for('players') }}">View Players</a></li>
+    <li><a href="{{ url_for('teams') }}">View Teams</a></li>
+
+    {% if not session.logged_in %}
+      <li><a href="{{ url_for('login') }}">Login</a></li>
+      <li><a href="{{ url_for('register') }}">Register</a></li>
+    {% else %}
+      <li><a href="{{ url_for('logout') }}">Logout</a></li>
+    {% endif %}
+  </ul>
+{% endblock %}

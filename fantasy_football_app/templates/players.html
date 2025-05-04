@@ -1,0 +1,39 @@
+<!-- templates/players.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-people"></i> Players</h1>
+    <div class="search-box">
+        <input type="text" class="form-control" id="playerSearch" placeholder="Search players...">
+    </div>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4" id="playersContainer">
+    {% for player in players %}
+    <div class="col">
+        <div class="card player-card h-100">
+            <div class="card-header bg-primary text-white">
+                {{ player.position }} | {{ player.team_name }}
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{ player.name }}</h5>
+                <div class="player-stats">
+                    <span class="badge bg-success">Goals: {{ player.goals }}</span>
+                    <span class="badge bg-info">Assists: {{ player.assists }}</span>
+                    <span class="badge bg-warning">Points: {{ player.total_points }}</span>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex justify-content-between">
+                    <span class="price-tag">£{{ "%.1f"|format(player.price) }}m</span>
+                    <button class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-plus"></i> Add to Team
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
