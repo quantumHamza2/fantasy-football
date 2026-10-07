@@ -7,10 +7,10 @@ import time
 
 # Database Configuration
 DB_CONFIG = {
-    "host": "localhost",
-    "user": "root",
-    "password": "",
-    "database": "fantasy_football_xyz"
+    "host": os.environ.get("MYSQL_HOST", "localhost"),
+    "user": os.environ.get("MYSQL_USER", "root"),
+    "password": os.environ.get("MYSQL_PASSWORD", ""),
+    "database": os.environ.get("MYSQL_DB", "fantasy_football_db")
 }
 
 # Player position multipliers for stats generation
@@ -43,10 +43,19 @@ def setup_database():
         cursor = conn.cursor()
         
         # Create database
-        cursor.execute("DROP DATABASE IF EXISTS fantasy_football_db")
-        cursor.execute("CREATE DATABASE fantasy_football_db")
+        # Refuse to overwrite an existing database; never destroy user data.
+        import re
+        database = DB_CONFIG["database"]
+        if not re.fullmatch(r"[A-Za-z0-9_]+", database):
+            raise ValueError("MYSQL_DB must contain only letters, digits and underscores")
+        cursor.execute(f"CREATE DATABASE `{database}`")
         conn.database = DB_CONFIG["database"]
         
+        cursor.execute("""CREATE TABLE users (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            username VARCHAR(100) UNIQUE NOT NULL,
+            password VARCHAR(255) NOT NULL
+        )""")
         # Enhanced tables with additional stats
         cursor.execute("""
         CREATE TABLE Teams (

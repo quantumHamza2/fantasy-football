@@ -1,17 +1,20 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
+import os
+import secrets
 import pymysql
 from pymysql.cursors import DictCursor
 from functools import wraps
 
 app = Flask(__name__)
-app.secret_key = 'your-secret-key-here'  # Change this to a random secret key
+app.secret_key = os.environ.get('FLASK_SECRET_KEY') or secrets.token_hex(32)
+app.config.update(SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE='Lax')
 
 # Database configuration
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'fantasy_football_db'
+app.config['MYSQL_HOST'] = os.environ.get('MYSQL_HOST', 'localhost')
+app.config['MYSQL_USER'] = os.environ.get('MYSQL_USER', 'root')
+app.config['MYSQL_PASSWORD'] = os.environ.get('MYSQL_PASSWORD', '')
+app.config['MYSQL_DB'] = os.environ.get('MYSQL_DB', 'fantasy_football_db')
 
 def get_db_connection():
     return pymysql.connect(
@@ -71,39 +74,6 @@ def logout():
 def index():
     return render_template('index.html')
 
-if __name__ == '__main__':
-    app.run(debug=True)
-
-# Database connection helper
-def get_db_connection():
-    try:
-        connection = pymysql.connect(
-            host=app.config['MYSQL_HOST'],
-            user=app.config['MYSQL_USER'],
-            password=app.config['MYSQL_PASSWORD'],
-            db=app.config['MYSQL_DB'],
-            cursorclass=DictCursor
-        )
-        return connection
-    except pymysql.Error as e:
-        flash(f"Database connection failed: {str(e)}", "danger")
-        return None
-
-
-
-
-
-@app.route('/logout')
-def logout():
-    session.clear()
-    flash('You have been logged out', 'info')
-    return redirect(url_for('index'))
-
-# Routes
-@app.route('/')
-def index():
-    return render_template('index.html')
-
 @app.route('/players')
 @login_required
 def players():
@@ -115,8 +85,8 @@ def players():
         with connection.cursor() as cursor:
             cursor.execute("""
                 SELECT p.*, t.name as team_name 
-                FROM players p
-                JOIN teams t ON p.team_id = t.team_id
+                FROM Players p
+                JOIN Teams t ON p.team_id = t.team_id
                 ORDER BY p.total_points DESC
             """)
             players = cursor.fetchall()
@@ -140,8 +110,8 @@ def teams():
                 SELECT t.*, 
                     COUNT(p.player_id) as player_count,
                     SUM(p.total_points) as total_points
-                FROM teams t
-                LEFT JOIN players p ON t.team_id = p.team_id
+                FROM Teams t
+                LEFT JOIN Players p ON t.team_id = p.team_id
                 GROUP BY t.team_id
                 ORDER BY total_points DESC
             """)
@@ -180,4 +150,4 @@ def register():
     return render_template('auth/register.html')
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)
+    app.run(host="127.0.0.1", debug=os.environ.get("FLASK_DEBUG") == "1", port=5001)
